@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.goddoro.watchaassignment.presentation.search.SearchListViewModel" />
+            type="com.goddoro.watchaassignment.MainViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

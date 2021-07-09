@@ -20,6 +20,9 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
     private val onClick: PublishSubject<MusicItem> = PublishSubject.create()
     val clickEvent: Observable<MusicItem> = onClick
 
+    private val onClickStar : PublishSubject<MusicItem> = PublishSubject.create()
+    val clickStar : Observable<MusicItem> = onClickStar
+
     private val diff = object : DiffUtil.ItemCallback<MusicItem>() {
         override fun areItemsTheSame(oldItem: MusicItem, newItem: MusicItem): Boolean {
             return oldItem.collectionId == newItem.collectionId
@@ -53,6 +56,10 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
 
             binding.root.setOnClickListener{
 
+            }
+
+            binding.imgStar.setOnClickListener {
+                onClickStar.onNext(differ.currentList[layoutPosition])
             }
 
         }

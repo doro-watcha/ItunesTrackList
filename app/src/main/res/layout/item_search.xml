@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,11 +13,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/img_art_work"
+            android:layout_width="200dp"
+            android:layout_height="0dp"
+            srcUrl="@{item.artworkUrl100}"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/txt_track_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@{item.trackName}"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_art_work"
+            app:layout_constraintTop_toTopOf="@+id/img_art_work"
+            tools:text="Greenday (Les Diamantaires Remix)" />
+
+        <TextView
+            android:id="@+id/txt_collection_name"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textColor="@color/black"
-            android:text="@{item.wrapperType}"/>
+            android:text="@{item.collectionName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_track_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_track_name"
+            tools:text="Re-interpretations" />
+
+        <TextView
+            android:id="@+id/txt_artist_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{item.artistName}"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txt_collection_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_collection_name"
+            tools:text="The Rurals" />
+
+        <ImageView
+            android:id="@+id/img_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/txt_artist_name"
+            app:layout_constraintEnd_toEndOf="@+id/txt_artist_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_artist_name"
+            android:src="@{item.isFavorite == true? @drawable/ic_star : @drawable/ic_empty_star}"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

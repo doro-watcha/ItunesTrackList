@@ -8,7 +8,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.goddoro.watchaassignment.MainViewModel
 import com.goddoro.watchaassignment.databinding.FragmentSearchListBinding
+import com.goddoro.watchaassignment.util.Broadcast
+import com.goddoro.watchaassignment.util.disposedBy
+import com.goddoro.watchaassignment.util.observeOnce
+import com.goddoro.watchaassignment.util.toggle
+import io.reactivex.disposables.CompositeDisposable
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchListFragment : Fragment() {
@@ -17,8 +24,9 @@ class SearchListFragment : Fragment() {
 
     private lateinit var mBinding: FragmentSearchListBinding
 
-    private val mViewModel: SearchListViewModel by viewModel()
+    private val mViewModel: MainViewModel by sharedViewModel()
 
+    private val compositeDisposable = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +48,22 @@ class SearchListFragment : Fragment() {
     private fun setupRecyclerView() {
 
         mBinding.recyclerview.apply{
-            adapter = SearchListAdapter()
+            adapter = SearchListAdapter().apply {
+
+                clickStar.subscribe({
+
+                    Log.d(TAG, it.isFavorite.get().toString())
+                    it.isFavorite.toggle()
+                    if (it.isFavorite.get()){
+                        mViewModel.addFavorite(it)
+                    }
+                    else {
+                        mViewModel.deleteFavorite(it)
+                    }
+                },{
+                    mViewModel.errorInvoked.value = it
+                }).disposedBy(compositeDisposable)
+            }
         }
 
     }
@@ -51,7 +74,7 @@ class SearchListFragment : Fragment() {
         mBinding.mSwipeRefreshLayout.apply {
 
             setOnRefreshListener {
-                mViewModel.refresh()
+                mViewModel.refreshSearch()
             }
         }
     }
@@ -64,6 +87,16 @@ class SearchListFragment : Fragment() {
                 if ( it == true ) {
                     mBinding.mSwipeRefreshLayout.isRefreshing = false
                 }
+            }
+
+            onInsertCompleted.observeOnce(viewLifecycleOwner){
+                refreshFavorite()
+                Toast.makeText(context, "즐겨찾기에 추가하였습니다.",Toast.LENGTH_SHORT).show()
+            }
+
+            onDeleteCompleted.observeOnce(viewLifecycleOwner){
+                refreshFavorite()
+                Toast.makeText(context, "즐겨찾기에서 해제하였습니다..",Toast.LENGTH_SHORT).show()
             }
 
             searchMusicList.observe(viewLifecycleOwner, {

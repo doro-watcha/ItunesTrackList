@@ -41,7 +41,8 @@ class MainApplication : Application() {
                     networkModule,
                     repositoryModule,
                     apiModule,
-                    utilModule
+                    utilModule,
+                    favoriteDatabaseModule
                 )
             )
         }
