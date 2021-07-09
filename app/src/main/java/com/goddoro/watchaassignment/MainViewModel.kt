@@ -108,6 +108,7 @@ class MainViewModel(
     fun deleteFavorite ( item : MusicItem) {
 
         val favoriteItem = favoriteList.value?.find { item.collectionId == it.collectionId}
+            ?: return
 
         Log.d(TAG, favoriteItem.toString())
 

@@ -56,7 +56,7 @@ class SearchListFragment : Fragment() {
 
                 clickStar.subscribe({
 
-                    Log.d(TAG, it.isFavorite.get().toString())
+                    Log.d(TAG, it.toString())
                     it.isFavorite.toggle()
                     starPressChanged.onNext(it)
                 },{
