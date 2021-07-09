@@ -13,13 +13,14 @@ class SearchListViewModel (
 
     val searchMusicList : MutableLiveData<List<MusicItem>> = MutableLiveData()
 
+    val onLoadCompleted : MutableLiveData<Boolean> = MutableLiveData()
     val errorInvoked : MutableLiveData<Throwable> = MutableLiveData()
 
     init {
         listSearchItems()
     }
 
-    fun listSearchItems() {
+    private fun listSearchItems() {
 
         viewModelScope.launch {
             kotlin.runCatching {
@@ -27,9 +28,15 @@ class SearchListViewModel (
 
             }.onSuccess {
                 searchMusicList.value = it
+                onLoadCompleted.value = true
             }.onFailure {
                 errorInvoked.value = it
+                onLoadCompleted.value = true
             }
         }
+    }
+
+    fun refresh() {
+        listSearchItems()
     }
 }

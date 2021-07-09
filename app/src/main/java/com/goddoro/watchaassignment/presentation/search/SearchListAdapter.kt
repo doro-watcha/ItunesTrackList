@@ -12,6 +12,7 @@ import com.goddoro.watchaassignment.databinding.ItemSearchBinding
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.koin.core.KoinComponent
+import androidx.databinding.library.baseAdapters.BR
 
 class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder>() {
 

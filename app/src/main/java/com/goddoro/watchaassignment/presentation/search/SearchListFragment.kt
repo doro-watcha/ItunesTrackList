@@ -1,6 +1,7 @@
 package com.goddoro.watchaassignment.presentation.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import com.goddoro.watchaassignment.databinding.FragmentSearchListBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchListFragment : Fragment() {
+
+    private val TAG = SearchListFragment::class.java.simpleName
 
     private lateinit var mBinding: FragmentSearchListBinding
 
@@ -31,6 +34,7 @@ class SearchListFragment : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
+        setupRefreshLayout()
     }
 
     private fun setupRecyclerView() {
@@ -41,11 +45,32 @@ class SearchListFragment : Fragment() {
 
     }
 
+    private fun setupRefreshLayout() {
+
+
+        mBinding.mSwipeRefreshLayout.apply {
+
+            setOnRefreshListener {
+                mViewModel.refresh()
+            }
+        }
+    }
+
     private fun observeViewModel() {
 
         mViewModel.apply{
 
+            onLoadCompleted.observe(viewLifecycleOwner){
+                if ( it == true ) {
+                    mBinding.mSwipeRefreshLayout.isRefreshing = false
+                }
+            }
+
+            searchMusicList.observe(viewLifecycleOwner, {
+                Log.d(TAG, it.size.toString())
+            })
             errorInvoked.observe(viewLifecycleOwner, {
+                Log.d(TAG, it.toString())
                 Toast.makeText(context, it.message,Toast.LENGTH_SHORT).show()
             })
         }

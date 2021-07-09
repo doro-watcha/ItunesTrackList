@@ -10,7 +10,7 @@ import retrofit2.http.QueryMap
 interface iTunesAPI {
 
     @GET("/search")
-    fun listSearchItems(
+    suspend fun listSearchItems(
         @QueryMap parameters: HashMap<String, Any>
     ) : SearchResponse
 }
