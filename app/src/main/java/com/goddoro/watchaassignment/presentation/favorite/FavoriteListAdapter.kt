@@ -22,6 +22,9 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
     private val onClick: PublishSubject<FavoriteItem> = PublishSubject.create()
     val clickEvent: Observable<FavoriteItem> = onClick
 
+    private val onClickStar : PublishSubject<FavoriteItem> = PublishSubject.create()
+    val clickStar : Observable<FavoriteItem> = onClickStar
+
     private val diff = object : DiffUtil.ItemCallback<FavoriteItem>() {
         override fun areItemsTheSame(oldItem: FavoriteItem, newItem: FavoriteItem): Boolean {
             return oldItem.collectionId == newItem.collectionId
@@ -55,6 +58,10 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
 
             binding.root.setOnClickListener{
 
+            }
+
+            binding.imgStar.setOnClickListener {
+                onClickStar.onNext(differ.currentList[layoutPosition])
             }
 
         }

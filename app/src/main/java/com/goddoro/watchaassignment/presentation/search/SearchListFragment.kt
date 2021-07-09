@@ -14,6 +14,7 @@ import com.goddoro.watchaassignment.databinding.FragmentSearchListBinding
 import com.goddoro.watchaassignment.util.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -27,6 +28,8 @@ class SearchListFragment : Fragment() {
     private val mViewModel: MainViewModel by sharedViewModel()
 
     private val starPressChanged : BehaviorSubject<MusicItem> = BehaviorSubject.create()
+
+    private val toastUtil : ToastUtil by inject()
 
     private val compositeDisposable = CompositeDisposable()
     private val starDisposable = CompositeDisposable()
@@ -57,11 +60,15 @@ class SearchListFragment : Fragment() {
                 clickStar.subscribe({
 
                     Log.d(TAG, it.toString())
-                    it.isFavorite.toggle()
+
                     starPressChanged.onNext(it)
                 },{
                     mViewModel.errorInvoked.value = it
                 }).disposedBy(compositeDisposable)
+
+                needMoreEvent.subscribe{
+                    mViewModel.needMoreData()
+                }.disposedBy(compositeDisposable)
             }
         }
 
@@ -90,12 +97,12 @@ class SearchListFragment : Fragment() {
 
             onInsertCompleted.observeOnce(viewLifecycleOwner){
                 refreshFavorite()
-                Toast.makeText(context, "즐겨찾기에 추가하였습니다.",Toast.LENGTH_SHORT).show()
+                toastUtil.createToast("Favorite에 추가되었습니다").show()
             }
 
             onDeleteCompleted.observeOnce(viewLifecycleOwner){
                 refreshFavorite()
-                Toast.makeText(context, "즐겨찾기에서 해제하였습니다..",Toast.LENGTH_SHORT).show()
+                toastUtil.createToast("Favorite에서 해제되었습니다").show()
             }
 
             searchMusicList.observe(viewLifecycleOwner, {
@@ -111,11 +118,19 @@ class SearchListFragment : Fragment() {
     private fun listenStarChange () {
 
         starPressChanged
-            .debounce(500L, TimeUnit.MILLISECONDS)
+            .debounce(10L, TimeUnit.MILLISECONDS)
             .addSchedulers()
             .subscribe({
-                if ( it.isFavorite.get() ) mViewModel.addFavorite(it)
-                else mViewModel.deleteFavorite(it)
+                it.isFavorite.toggle()
+                if ( it.isFavorite.get() ) {
+                    val favoriteItem = it.toFavoriteItem()
+                    mViewModel.addFavorite(favoriteItem)
+                }
+                else {
+                    val favoriteItem =
+                        mViewModel.favoriteList.value?.find { favoriteItem -> favoriteItem.collectionId == it.collectionId }
+                    if (favoriteItem != null) mViewModel.deleteFavorite(favoriteItem)
+                }
             },{
 
             }).disposedBy(starDisposable)

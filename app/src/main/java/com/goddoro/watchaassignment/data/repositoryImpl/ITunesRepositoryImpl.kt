@@ -8,11 +8,12 @@ import com.goddoro.watchaassignment.util.filterValueNotNull
 class ITunesRepositoryImpl( val api : iTunesAPI) : ITunesRepository {
 
 
-    override suspend fun listMusicItem(limit: Int?, term: String, entity: String): List<MusicItem> {
+    override suspend fun listMusicItem(limit: Int?, term: String, entity: String, offset: Int?): List<MusicItem> {
         val params = hashMapOf(
             "limit" to limit,
             "term" to term,
-            "entity" to entity
+            "entity" to entity,
+            "offset" to offset
         ).filterValueNotNull()
         return api.listSearchItems(params).results
     }

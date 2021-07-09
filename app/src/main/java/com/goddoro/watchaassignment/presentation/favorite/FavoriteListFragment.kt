@@ -43,7 +43,15 @@ class FavoriteListFragment : Fragment() {
 
         mBinding.recyclerview.apply {
 
-            adapter = FavoriteListAdapter()
+            adapter = FavoriteListAdapter().apply {
+
+                clickStar.subscribe{
+                    mViewModel.deleteFavorite(it)
+
+                    val musicItem = mViewModel.searchMusicList.value?.find { musicItem -> musicItem.collectionId == it.collectionId}
+                    musicItem?.isFavorite?.set(false)
+                }.disposedBy(compositeDisposable)
+            }
         }
     }
 

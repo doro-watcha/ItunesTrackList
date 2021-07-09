@@ -47,6 +47,11 @@ class MainViewModel(
         listSearchItems()
     }
 
+
+    /**
+     * For Search Item
+     */
+
     private fun listSearchItems() {
 
         viewModelScope.launch {
@@ -55,20 +60,7 @@ class MainViewModel(
                 iTunesRepository.listMusicItem()
             }.onSuccess {
                 searchMusicList.value = it
-
-                searchMusicList.value?.forEach {
-                    it.isFavorite = ObservableBoolean(false)
-                }
-
-                favoriteList.value?.forEach { favoriteItem ->
-                    val musicItem = searchMusicList.value?.find { musicItem ->
-                        favoriteItem.collectionId == musicItem.collectionId
-                    }
-                    musicItem?.isFavorite = ObservableBoolean(true)
-                }
-
-
-
+                setFavoriteItems()
                 onLoadCompleted.value = true
             }.onFailure {
                 errorInvoked.value = it
@@ -76,6 +68,44 @@ class MainViewModel(
             }
         }
     }
+
+    fun needMoreData() {
+
+        viewModelScope.launch {
+
+            kotlin.runCatching {
+
+                iTunesRepository.listMusicItem(
+                    offset = searchMusicList.value?.size
+                )
+            }.onSuccess {
+                searchMusicList.value = ( searchMusicList.value ?: listOf() )+ it
+                setFavoriteItems()
+            }.onFailure {
+                errorInvoked.value = it
+            }
+
+        }
+    }
+
+    private fun setFavoriteItems() {
+        searchMusicList.value?.forEach {
+            it.isFavorite = ObservableBoolean(false)
+        }
+
+        favoriteList.value?.forEach { favoriteItem ->
+            val musicItem = searchMusicList.value?.find { musicItem ->
+                favoriteItem.collectionId == musicItem.collectionId
+            }
+            musicItem?.isFavorite = ObservableBoolean(true)
+        }
+
+
+    }
+
+    /**
+     * For Favorite List
+     */
 
     private fun listFavoriteItems() {
 
@@ -91,11 +121,11 @@ class MainViewModel(
         }
     }
 
-    fun addFavorite( item : MusicItem) {
+    fun addFavorite( item : FavoriteItem) {
         viewModelScope.launch{
 
             kotlin.runCatching {
-                favoriteDao.insert( item.toFavoriteItem() )
+                favoriteDao.insert( item )
             }.onSuccess {
                 onInsertCompleted.value = Once(Unit)
             }.onFailure {
@@ -105,17 +135,13 @@ class MainViewModel(
 
     }
 
-    fun deleteFavorite ( item : MusicItem) {
+    fun deleteFavorite ( item : FavoriteItem) {
 
-        val favoriteItem = favoriteList.value?.find { item.collectionId == it.collectionId}
-            ?: return
-
-        Log.d(TAG, favoriteItem.toString())
 
         viewModelScope.launch {
 
             kotlin.runCatching {
-                favoriteDao.delete(favoriteItem)
+                favoriteDao.delete(item)
             }.onSuccess {
                 onDeleteCompleted.value = Once(Unit)
             }.onFailure {
