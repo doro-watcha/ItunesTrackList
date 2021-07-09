@@ -9,14 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.goddoro.watchaassignment.MainViewModel
+import com.goddoro.watchaassignment.data.MusicItem
 import com.goddoro.watchaassignment.databinding.FragmentSearchListBinding
-import com.goddoro.watchaassignment.util.Broadcast
-import com.goddoro.watchaassignment.util.disposedBy
-import com.goddoro.watchaassignment.util.observeOnce
-import com.goddoro.watchaassignment.util.toggle
+import com.goddoro.watchaassignment.util.*
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.BehaviorSubject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class SearchListFragment : Fragment() {
 
@@ -26,7 +26,10 @@ class SearchListFragment : Fragment() {
 
     private val mViewModel: MainViewModel by sharedViewModel()
 
+    private val starPressChanged : BehaviorSubject<MusicItem> = BehaviorSubject.create()
+
     private val compositeDisposable = CompositeDisposable()
+    private val starDisposable = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +46,7 @@ class SearchListFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
         setupRefreshLayout()
+        listenStarChange()
     }
 
     private fun setupRecyclerView() {
@@ -54,12 +58,7 @@ class SearchListFragment : Fragment() {
 
                     Log.d(TAG, it.isFavorite.get().toString())
                     it.isFavorite.toggle()
-                    if (it.isFavorite.get()){
-                        mViewModel.addFavorite(it)
-                    }
-                    else {
-                        mViewModel.deleteFavorite(it)
-                    }
+                    starPressChanged.onNext(it)
                 },{
                     mViewModel.errorInvoked.value = it
                 }).disposedBy(compositeDisposable)
@@ -109,7 +108,26 @@ class SearchListFragment : Fragment() {
         }
     }
 
+    private fun listenStarChange () {
 
+        starPressChanged
+            .debounce(500L, TimeUnit.MILLISECONDS)
+            .addSchedulers()
+            .subscribe({
+                if ( it.isFavorite.get() ) mViewModel.addFavorite(it)
+                else mViewModel.deleteFavorite(it)
+            },{
+
+            }).disposedBy(starDisposable)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        compositeDisposable.clear()
+        starDisposable.clear()
+    }
 
 
     companion object {
