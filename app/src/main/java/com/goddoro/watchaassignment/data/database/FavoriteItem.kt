@@ -24,5 +24,7 @@ data class FavoriteItem(
 
     val artworkUrl60 : String,
 
-    val artworkUrl100 : String
+    val artworkUrl100 : String,
+
+    val index : Int
 ) : Parcelable

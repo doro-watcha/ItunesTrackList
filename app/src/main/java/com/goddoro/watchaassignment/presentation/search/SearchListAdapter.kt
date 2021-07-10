@@ -20,8 +20,8 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
     private val onClick: PublishSubject<MusicItem> = PublishSubject.create()
     val clickEvent: Observable<MusicItem> = onClick
 
-    private val onClickStar : PublishSubject<MusicItem> = PublishSubject.create()
-    val clickStar : Observable<MusicItem> = onClickStar
+    private val onClickStar : PublishSubject<Pair<Int,MusicItem>> = PublishSubject.create()
+    val clickStar : Observable<Pair<Int,MusicItem>> = onClickStar
 
     private val onNeedMore : PublishSubject<Unit> = PublishSubject.create()
     val needMoreEvent : Observable<Unit> = onNeedMore
@@ -63,7 +63,7 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
             }
 
             binding.imgStar.setOnClickListener {
-                onClickStar.onNext(differ.currentList[layoutPosition])
+                onClickStar.onNext(Pair(layoutPosition,differ.currentList[layoutPosition]))
             }
 
         }
@@ -71,6 +71,8 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
         fun bind(item: MusicItem) {
             binding.setVariable(BR.item, item)
             binding.executePendingBindings()
+
+            binding.txtIndex.text = ( layoutPosition + 1 ).toString()
 
             if ( ( layoutPosition + 3 ) % 10 == 0 && ( differ.currentList.size - 3 ) == layoutPosition ) {
                 onNeedMore.onNext(Unit)

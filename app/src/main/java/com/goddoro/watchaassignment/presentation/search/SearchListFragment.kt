@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.goddoro.watchaassignment.MainViewModel
@@ -27,12 +28,13 @@ class SearchListFragment : Fragment() {
 
     private val mViewModel: MainViewModel by sharedViewModel()
 
-    private val starPressChanged : BehaviorSubject<MusicItem> = BehaviorSubject.create()
+    private val starPressChanged : BehaviorSubject<Pair<Int,MusicItem>> = BehaviorSubject.create()
 
     private val toastUtil : ToastUtil by inject()
 
     private val compositeDisposable = CompositeDisposable()
     private val starDisposable = CompositeDisposable()
+    private val reselectDisposable = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +52,7 @@ class SearchListFragment : Fragment() {
         observeViewModel()
         setupRefreshLayout()
         listenStarChange()
+        setupBroadcast()
     }
 
     private fun setupRecyclerView() {
@@ -59,8 +62,13 @@ class SearchListFragment : Fragment() {
 
                 clickStar.subscribe({
 
-                    Log.d(TAG, it.toString())
+                    debugE(TAG, it.first)
+                    debugE(TAG, it.second.isFavorite)
+                    debugE(TAG, it.second)
 
+                    it.second.isFavorite.toggle()
+
+                    debugE(TAG, it.second.isFavorite.get())
                     starPressChanged.onNext(it)
                 },{
                     mViewModel.errorInvoked.value = it
@@ -121,14 +129,14 @@ class SearchListFragment : Fragment() {
             .debounce(10L, TimeUnit.MILLISECONDS)
             .addSchedulers()
             .subscribe({
-                it.isFavorite.toggle()
-                if ( it.isFavorite.get() ) {
-                    val favoriteItem = it.toFavoriteItem()
+
+                if ( it.second.isFavorite.get() ) {
+                    val favoriteItem = it.second.toFavoriteItem(it.first)
                     mViewModel.addFavorite(favoriteItem)
                 }
                 else {
                     val favoriteItem =
-                        mViewModel.favoriteList.value?.find { favoriteItem -> favoriteItem.collectionId == it.collectionId }
+                        mViewModel.favoriteList.value?.find { favoriteItem -> favoriteItem.collectionId == it.second.collectionId }
                     if (favoriteItem != null) mViewModel.deleteFavorite(favoriteItem)
                 }
             },{
@@ -136,12 +144,24 @@ class SearchListFragment : Fragment() {
             }).disposedBy(starDisposable)
     }
 
+    private fun setupBroadcast() {
+
+        Broadcast.apply {
+
+            searchListReselectBroadcast.subscribe{
+                if ( mViewModel.searchMusicList.value?.size ?: 0 > 30) mBinding.recyclerview.scrollToPosition(0)
+                else mBinding.recyclerview.smoothScrollToPosition(0)
+            }.disposedBy(reselectDisposable)
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
 
-        compositeDisposable.clear()
-        starDisposable.clear()
+        compositeDisposable.dispose()
+        starDisposable.dispose()
+        reselectDisposable.dispose()
     }
 
 

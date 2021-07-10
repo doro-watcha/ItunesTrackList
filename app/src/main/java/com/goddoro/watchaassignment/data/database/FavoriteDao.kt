@@ -12,7 +12,7 @@ interface FavoriteDao {
     @Delete
     fun delete(vararg item: FavoriteItem?)
 
-    @Query("SELECT * FROM FavoriteItem")
+    @Query("SELECT * FROM FavoriteItem ORDER BY `index` ")
     fun list(): List<FavoriteItem>
 
 }

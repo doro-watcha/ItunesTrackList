@@ -1,6 +1,8 @@
 package com.goddoro.watchaassignment.util
 
 import android.graphics.drawable.Drawable
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableBoolean
@@ -8,6 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.goddoro.watchaassignment.BuildConfig
 import com.goddoro.watchaassignment.data.MusicItem
 import com.goddoro.watchaassignment.data.database.FavoriteItem
 
@@ -34,14 +37,15 @@ fun ImageView.loadUrlAsync(url: String?, placeholder: Drawable? = null) {
     }
 }
 
-fun MusicItem.toFavoriteItem() : FavoriteItem {
+fun MusicItem.toFavoriteItem( index : Int ) : FavoriteItem {
     return FavoriteItem(
         collectionId = this.collectionId,
         artistName = this.artistName,
         trackName = this.trackName,
         artworkUrl60 = this.artworkUrl60 ?: "",
         artworkUrl100 = this.artworkUrl100 ?: "",
-        collectionName = this.collectionName
+        collectionName = this.collectionName,
+        index = index
     )
 }
 
@@ -78,4 +82,20 @@ fun <T> LiveData<Once<T>>.observeOnce(lifecycle: LifecycleOwner, listener: (T) -
 
 fun ObservableBoolean.toggle(){
     set(!this.get())
+}
+
+@BindingAdapter("android:visibility")
+fun View.setVisibility ( isVisible : Boolean) {
+    if ( isVisible) this.visibility = View.VISIBLE
+    else this.visibility = View.GONE
+}
+
+
+fun debugE(tag: String, message: Any?) {
+    if (BuildConfig.DEBUG)
+        Log.e(tag, "🧩" + message.toString() + "🧩")
+}
+
+fun debugE(message: Any?) {
+    debugE("DEBUG", message)
 }

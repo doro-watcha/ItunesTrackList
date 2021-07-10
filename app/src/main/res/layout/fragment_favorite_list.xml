@@ -15,9 +15,24 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@{vm.favoriteList.size() > 0}"
             app:recyclerview_favorite_items="@{vm.favoriteList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/txt_no_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="@{vm.favoriteList.size() == 0}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="There are no favorite items"
+            android:drawableTop="@drawable/ic_star" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
