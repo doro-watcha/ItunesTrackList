@@ -13,7 +13,8 @@ class ITunesRepositoryImpl( val api : iTunesAPI) : ITunesRepository {
             "limit" to limit,
             "term" to term,
             "entity" to entity,
-            "offset" to offset
+            "offset" to offset,
+            "sort" to "recent"
         ).filterValueNotNull()
         return api.listSearchItems(params).results
     }

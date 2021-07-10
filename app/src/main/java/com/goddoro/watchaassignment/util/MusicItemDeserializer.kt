@@ -12,14 +12,14 @@ class MusicItemDeserializer : JsonDeserializer<MusicItem> {
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): MusicItem {
         val jsonObject = json?.asJsonObject ?: throw NullPointerException("Response Json Music Item is null")
 
-        val collectionId = jsonObject["collectionId"].asInt
+        val trackId = jsonObject["trackId"].asInt
         val collectionName = jsonObject["collectionName"].asString
         val trackName = jsonObject["trackName"].asString
         val artistName = jsonObject["artistName"].asString
-        val artwork60Url = jsonObject["artwork60Url"].asString
-        val artwork100Url = jsonObject["artwork100Url"].asString
+        val artwork60Url = jsonObject["artworkUrl60"].asString
+        val artwork100Url = jsonObject["artworkUrl100"].asString
         val isFavorite = ObservableBoolean(false)
 
-        return MusicItem(collectionId,trackName,artistName, collectionName, artwork60Url , artwork100Url, isFavorite)
+        return MusicItem(trackId,trackName,artistName, collectionName, artwork60Url , artwork100Url, isFavorite)
     }
 }

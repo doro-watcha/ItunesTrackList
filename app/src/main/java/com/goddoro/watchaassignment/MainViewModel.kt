@@ -34,8 +34,8 @@ class MainViewModel(
      * Event
      */
     val onLoadCompleted : MutableLiveData<Boolean> = MutableLiveData()
-    val onInsertCompleted : MutableLiveData<Once<Unit>> = MutableLiveData()
-    val onDeleteCompleted : MutableLiveData<Once<Unit>> = MutableLiveData()
+    val onInsertCompleted : MutableLiveData<Once<FavoriteItem>> = MutableLiveData()
+    val onDeleteCompleted : MutableLiveData<Once<FavoriteItem>> = MutableLiveData()
     val errorInvoked : MutableLiveData<Throwable> = MutableLiveData()
 
     /**
@@ -79,7 +79,7 @@ class MainViewModel(
                     offset = searchMusicList.value?.size
                 )
             }.onSuccess {
-                searchMusicList.value = ( searchMusicList.value ?: listOf() )+ it
+                searchMusicList.value = ( ( searchMusicList.value ?: listOf() )+ it )
                 setFavoriteItems()
             }.onFailure {
                 errorInvoked.value = it
@@ -89,13 +89,9 @@ class MainViewModel(
     }
 
     private fun setFavoriteItems() {
-        searchMusicList.value?.forEach {
-            it.isFavorite = ObservableBoolean(false)
-        }
-
         favoriteList.value?.forEach { favoriteItem ->
             val musicItem = searchMusicList.value?.find { musicItem ->
-                favoriteItem.collectionId == musicItem.collectionId
+                favoriteItem.trackId == musicItem.trackId
             }
             musicItem?.isFavorite = ObservableBoolean(true)
         }
@@ -127,7 +123,7 @@ class MainViewModel(
             kotlin.runCatching {
                 favoriteDao.insert( item )
             }.onSuccess {
-                onInsertCompleted.value = Once(Unit)
+                onInsertCompleted.value = Once(item)
             }.onFailure {
                 errorInvoked.value = it
             }
@@ -143,7 +139,7 @@ class MainViewModel(
             kotlin.runCatching {
                 favoriteDao.delete(item)
             }.onSuccess {
-                onDeleteCompleted.value = Once(Unit)
+                onDeleteCompleted.value = Once(item)
             }.onFailure {
                 errorInvoked.value = it
             }

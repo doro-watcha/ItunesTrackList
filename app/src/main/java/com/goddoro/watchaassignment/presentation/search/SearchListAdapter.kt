@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.koin.core.KoinComponent
 import androidx.databinding.library.baseAdapters.BR
+import com.goddoro.watchaassignment.util.CommonConst.ITEM_OFFSET
 
 class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder>() {
 
@@ -29,7 +30,7 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
 
     private val diff = object : DiffUtil.ItemCallback<MusicItem>() {
         override fun areItemsTheSame(oldItem: MusicItem, newItem: MusicItem): Boolean {
-            return oldItem.collectionId == newItem.collectionId
+            return oldItem.trackId == newItem.trackId
         }
 
         override fun areContentsTheSame(oldItem: MusicItem, newItem: MusicItem): Boolean {
@@ -74,7 +75,7 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
 
             binding.txtIndex.text = ( layoutPosition + 1 ).toString()
 
-            if ( ( layoutPosition + 3 ) % 10 == 0 && ( differ.currentList.size - 3 ) == layoutPosition ) {
+            if ( ( layoutPosition + 1 ) % ITEM_OFFSET == 0 && ( differ.currentList.size - 1 ) == layoutPosition ) {
                 onNeedMore.onNext(Unit)
             }
 

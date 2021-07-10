@@ -14,7 +14,7 @@ data class FavoriteItem(
      */
     @PrimaryKey(autoGenerate = false)
     @Expose
-    val collectionId: Int = 0,
+    val trackId: Int = 0,
 
     val trackName : String,
 

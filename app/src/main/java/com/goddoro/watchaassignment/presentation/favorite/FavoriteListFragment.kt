@@ -48,7 +48,8 @@ class FavoriteListFragment : Fragment() {
                 clickStar.subscribe{
                     mViewModel.deleteFavorite(it)
 
-                    val musicItem = mViewModel.searchMusicList.value?.find { musicItem -> musicItem.collectionId == it.collectionId}
+                    val musicItem = mViewModel.searchMusicList.value?.find { musicItem -> musicItem.trackId == it.trackId && musicItem.isFavorite.get() }
+                    if ( musicItem == null) Toast.makeText(context, "에러가 발생하였습니다",Toast.LENGTH_SHORT).show()
                     musicItem?.isFavorite?.set(false)
                 }.disposedBy(compositeDisposable)
             }

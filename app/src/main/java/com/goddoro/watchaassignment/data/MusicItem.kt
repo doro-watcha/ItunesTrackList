@@ -2,13 +2,16 @@ package com.goddoro.watchaassignment.data
 
 import android.os.Parcelable
 import androidx.databinding.ObservableBoolean
+import com.goddoro.watchaassignment.util.MusicItemDeserializer
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@JsonAdapter(MusicItemDeserializer::class)
 @Parcelize
 data class MusicItem(
-    @SerializedName("collectionId")
-    val collectionId: Int,
+    @SerializedName("trackId")
+    val trackId: Int,
 
     @SerializedName("trackName")
     val trackName: String,

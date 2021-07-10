@@ -27,7 +27,7 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
 
     private val diff = object : DiffUtil.ItemCallback<FavoriteItem>() {
         override fun areItemsTheSame(oldItem: FavoriteItem, newItem: FavoriteItem): Boolean {
-            return oldItem.collectionId == newItem.collectionId
+            return oldItem.trackId == newItem.trackId
         }
 
         override fun areContentsTheSame(oldItem: FavoriteItem, newItem: FavoriteItem): Boolean {

@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val favoriteDatabaseModule = module {
     single(named("FavoriteDatabase")) {
-        Room.databaseBuilder(get(), FavoriteDatabase::class.java, "002")
+        Room.databaseBuilder(get(), FavoriteDatabase::class.java, "003")
             .allowMainThreadQueries()
             .build()
     } bind FavoriteDatabase::class

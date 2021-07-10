@@ -39,7 +39,7 @@ fun ImageView.loadUrlAsync(url: String?, placeholder: Drawable? = null) {
 
 fun MusicItem.toFavoriteItem( index : Int ) : FavoriteItem {
     return FavoriteItem(
-        collectionId = this.collectionId,
+        trackId = this.trackId,
         artistName = this.artistName,
         trackName = this.trackName,
         artworkUrl60 = this.artworkUrl60 ?: "",

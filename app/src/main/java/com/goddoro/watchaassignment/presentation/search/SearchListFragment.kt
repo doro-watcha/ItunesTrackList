@@ -105,12 +105,12 @@ class SearchListFragment : Fragment() {
 
             onInsertCompleted.observeOnce(viewLifecycleOwner){
                 refreshFavorite()
-                toastUtil.createToast("Favorite에 추가되었습니다").show()
+                toastUtil.createToast("${it.trackName}을(를) Favorite에 추가하였습니다").show()
             }
 
             onDeleteCompleted.observeOnce(viewLifecycleOwner){
                 refreshFavorite()
-                toastUtil.createToast("Favorite에서 해제되었습니다").show()
+                toastUtil.createToast("${it.trackName}을(를) Favorite에서 삭제하었습니다").show()
             }
 
             searchMusicList.observe(viewLifecycleOwner, {
@@ -136,7 +136,7 @@ class SearchListFragment : Fragment() {
                 }
                 else {
                     val favoriteItem =
-                        mViewModel.favoriteList.value?.find { favoriteItem -> favoriteItem.collectionId == it.second.collectionId }
+                        mViewModel.favoriteList.value?.find { favoriteItem -> favoriteItem.trackId == it.second.trackId }
                     if (favoriteItem != null) mViewModel.deleteFavorite(favoriteItem)
                 }
             },{
