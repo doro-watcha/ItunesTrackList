@@ -51,8 +51,10 @@ class FavoriteListFragment : Fragment() {
                 clickStar.subscribe{
                     mViewModel.deleteFavorite(it)
 
+                    /**
+                     * Favorite에서 삭제할 때, 현재 Music Item에 있는 star도 제거해준다.
+                     */
                     val musicItem = mViewModel.searchMusicList.value?.find { musicItem -> musicItem.trackId == it.trackId && musicItem.isFavorite.get() }
-                    if ( musicItem == null) Toast.makeText(context, "에러가 발생하였습니다",Toast.LENGTH_SHORT).show()
                     musicItem?.isFavorite?.set(false)
                 }.disposedBy(compositeDisposable)
             }

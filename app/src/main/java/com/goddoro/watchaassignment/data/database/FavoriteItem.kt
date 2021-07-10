@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose
 import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "FavoriteItem")
-@Parcelize
 data class FavoriteItem(
     /**
      * PK
@@ -27,4 +26,4 @@ data class FavoriteItem(
     val artworkUrl100 : String,
 
     val index : Int
-) : Parcelable
+)

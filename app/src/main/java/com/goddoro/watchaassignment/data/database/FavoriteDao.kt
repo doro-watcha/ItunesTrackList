@@ -7,12 +7,12 @@ import io.reactivex.Completable
 interface FavoriteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(item: FavoriteItem)
+    suspend fun insert(item: FavoriteItem)
 
     @Delete
-    fun delete(vararg item: FavoriteItem?)
+    suspend fun delete(vararg item: FavoriteItem?)
 
-    @Query("SELECT * FROM FavoriteItem ORDER BY `index` ")
-    fun list(): List<FavoriteItem>
+    @Query("SELECT * FROM `FavoriteItem` ORDER BY `index` ")
+    suspend fun list(): List<FavoriteItem>
 
 }
