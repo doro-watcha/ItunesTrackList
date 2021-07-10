@@ -118,7 +118,11 @@ class SearchListFragment : Fragment() {
             })
             errorInvoked.observe(viewLifecycleOwner, {
                 Log.d(TAG, it.toString())
-                Toast.makeText(context, it.message,Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "서버가 불안정합니다",Toast.LENGTH_SHORT).show()
+
+                if ( mBinding.mSwipeRefreshLayout.isRefreshing) {
+                    mBinding.mSwipeRefreshLayout.isRefreshing = false
+                }
             })
         }
     }

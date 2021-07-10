@@ -11,6 +11,7 @@ import com.goddoro.watchaassignment.data.database.FavoriteItem
 import com.goddoro.watchaassignment.data.repository.ITunesRepository
 import com.goddoro.watchaassignment.navigation.MainMenu
 import com.goddoro.watchaassignment.util.Once
+import com.goddoro.watchaassignment.util.debugE
 import com.goddoro.watchaassignment.util.toFavoriteItem
 import kotlinx.coroutines.launch
 import net.bytebuddy.implementation.bytecode.Throw
@@ -54,12 +55,14 @@ class MainViewModel(
 
     private fun listSearchItems() {
 
+        onLoadCompleted.value = false
+
         viewModelScope.launch {
             kotlin.runCatching {
                 if ( favoriteList.value == null) favoriteList.value = favoriteDao.list()
                 iTunesRepository.listMusicItem()
             }.onSuccess {
-                searchMusicList.value = it
+                searchMusicList.value = it.distinctBy { it.trackId }
                 setFavoriteItems()
                 onLoadCompleted.value = true
             }.onFailure {
@@ -71,6 +74,8 @@ class MainViewModel(
 
     fun needMoreData() {
 
+        onLoadCompleted.value = false
+
         viewModelScope.launch {
 
             kotlin.runCatching {
@@ -79,10 +84,14 @@ class MainViewModel(
                     offset = searchMusicList.value?.size
                 )
             }.onSuccess {
-                searchMusicList.value = ( ( searchMusicList.value ?: listOf() )+ it )
+                searchMusicList.value = ( ( searchMusicList.value ?: listOf() )+ it ).distinctBy { it.trackId }
+
+                debugE(TAG, searchMusicList.value?.size)
                 setFavoriteItems()
+                onLoadCompleted.value = true
             }.onFailure {
                 errorInvoked.value = it
+                onLoadCompleted.value = true
             }
 
         }

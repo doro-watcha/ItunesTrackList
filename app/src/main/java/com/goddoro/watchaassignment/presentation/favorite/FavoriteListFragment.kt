@@ -23,6 +23,8 @@ class FavoriteListFragment : Fragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
+    private val reselectDisposable = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,6 +39,7 @@ class FavoriteListFragment : Fragment() {
 
         observeViewModel()
         setupRecyclerView()
+        setupBroadcast()
     }
 
     private fun setupRecyclerView() {
@@ -67,10 +70,22 @@ class FavoriteListFragment : Fragment() {
 
     }
 
+    private fun setupBroadcast() {
+
+        Broadcast.apply {
+
+            favoriteListReselectBroadcast.subscribe{
+                if ( mViewModel.favoriteList.value?.size ?: 0 > 30) mBinding.recyclerview.scrollToPosition(0)
+                else mBinding.recyclerview.smoothScrollToPosition(0)
+            }.disposedBy(reselectDisposable)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         compositeDisposable.dispose()
+        reselectDisposable.dispose()
     }
 
     companion object {

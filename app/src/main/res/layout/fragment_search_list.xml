@@ -45,6 +45,17 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:recyclerview_search_items="@{vm.searchMusicList}" />
 
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="20dp"
+                android:visibility="@{vm.onLoadCompleted == false}"
+                />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -75,7 +75,7 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
 
             binding.txtIndex.text = ( layoutPosition + 1 ).toString()
 
-            if ( ( layoutPosition + 1 ) % ITEM_OFFSET == 0 && ( differ.currentList.size - 1 ) == layoutPosition ) {
+            if ( ( differ.currentList.size - 10 ) == layoutPosition || differ.currentList.size - 1 == layoutPosition  ) {
                 onNeedMore.onNext(Unit)
             }
 

@@ -23,19 +23,7 @@ fun HashMap<String, out Any?>.filterValueNotNull(): HashMap<String, Any> {
     return this.filterNot { it.value == null } as HashMap<String, Any>
 }
 
-@BindingAdapter("srcUrl", "placeholder", requireAll = false)
-fun ImageView.loadUrlAsync(url: String?, placeholder: Drawable? = null) {
-    if (url == null) {
-        Glide.with(this).load(placeholder).into(this)
-    } else {
-        Glide.with(this).load(url)
-            .apply {
-                if (placeholder != null)
-                    (placeholder)
-            }
-            .into(this)
-    }
-}
+
 
 fun MusicItem.toFavoriteItem( index : Int ) : FavoriteItem {
     return FavoriteItem(
@@ -82,12 +70,6 @@ fun <T> LiveData<Once<T>>.observeOnce(lifecycle: LifecycleOwner, listener: (T) -
 
 fun ObservableBoolean.toggle(){
     set(!this.get())
-}
-
-@BindingAdapter("android:visibility")
-fun View.setVisibility ( isVisible : Boolean) {
-    if ( isVisible) this.visibility = View.VISIBLE
-    else this.visibility = View.GONE
 }
 
 
