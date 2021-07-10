@@ -106,4 +106,13 @@ class MainActivity : AppCompatActivity() {
         mViewModel.menu.value = menu
     }
 
+    override fun onBackPressed() {
+
+        if ( mViewModel.menu.value == MainMenu.FAVORITE) {
+            mBinding.bottomNavigationView.selectedItemId = MainMenu.SEARCH.menuId
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }

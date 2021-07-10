@@ -31,7 +31,7 @@
                 android:textColor="@color/black"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="Search Result for 'greenday'"/>
+                android:text="Search Result for greenday"/>
 
 
             <androidx.recyclerview.widget.RecyclerView

@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.koin.core.KoinComponent
 import androidx.databinding.library.baseAdapters.BR
 import com.goddoro.watchaassignment.util.CommonConst.ITEM_OFFSET
+import com.goddoro.watchaassignment.util.setGreenText
 
 class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder>() {
 
@@ -74,6 +75,11 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
             binding.executePendingBindings()
 
             binding.txtIndex.text = ( layoutPosition + 1 ).toString()
+
+            binding.txtArtistName.setGreenText()
+            binding.txtCollectionName.setGreenText()
+            binding.txtTrackName.setGreenText()
+
 
             if ( ( differ.currentList.size - 10 ) == layoutPosition || differ.currentList.size - 1 == layoutPosition  ) {
                 onNeedMore.onNext(Unit)

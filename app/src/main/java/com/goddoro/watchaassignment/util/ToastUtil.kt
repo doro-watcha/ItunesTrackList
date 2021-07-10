@@ -19,7 +19,7 @@ class ToastUtil ( val context : Context) {
         binding.tvSample.text = message
 
         return Toast(context).apply {
-            setGravity(Gravity.BOTTOM or Gravity.CENTER, 0, 16.toPx())
+            setGravity(Gravity.BOTTOM or Gravity.CENTER, 0, 55.toPx())
             duration = Toast.LENGTH_SHORT
             view = binding.root
         }

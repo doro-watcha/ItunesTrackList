@@ -48,11 +48,16 @@ class SearchListFragment : Fragment() {
         mBinding.lifecycleOwner = viewLifecycleOwner
 
 
+        initView()
         setupRecyclerView()
         observeViewModel()
         setupRefreshLayout()
         listenStarChange()
         setupBroadcast()
+    }
+
+    private fun initView() {
+        mBinding.txtTitle.setGreenText()
     }
 
     private fun setupRecyclerView() {

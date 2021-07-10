@@ -1,9 +1,14 @@
 package com.goddoro.watchaassignment.util
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LifecycleOwner
@@ -80,4 +85,24 @@ fun debugE(tag: String, message: Any?) {
 
 fun debugE(message: Any?) {
     debugE("DEBUG", message)
+}
+
+fun TextView.setGreenText() {
+    var list = listOf("Green Day", "Greenday", "greenday", "green day", "Green day", "GreenDay", "Green", "green")
+
+    val greenText = list.find { ( text.indexOf(it) >= 0) }
+    if ( greenText != null) {
+        val start = text.indexOf(greenText)
+        val end = start + (greenText.length)
+
+        val spannableString = SpannableString(text)
+        spannableString.setSpan(
+            ForegroundColorSpan(Color.parseColor("#75ee49")),
+            start,
+            end,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        this.text = spannableString
+    }
 }
