@@ -5,7 +5,7 @@
 
 ## [Custom View ]
 
-<img src="itunes_track_list.gif" width=200/>
+<img src="itunes_track_list.gif" width=200/> <img src="itunes_track_list2.gif" width=200/>
 
 
 ## [ Tech Stack ]
