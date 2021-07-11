@@ -11,6 +11,7 @@ import com.goddoro.watchaassignment.data.MusicItem
 import com.goddoro.watchaassignment.data.database.FavoriteItem
 import com.goddoro.watchaassignment.databinding.ItemFavoriteBinding
 import com.goddoro.watchaassignment.databinding.ItemSearchBinding
+import com.goddoro.watchaassignment.util.setGreenText
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.koin.core.KoinComponent
@@ -69,6 +70,10 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
         fun bind(item: FavoriteItem) {
             binding.setVariable(BR.item, item)
             binding.executePendingBindings()
+
+            binding.txtArtistName.setGreenText()
+            binding.txtCollectionName.setGreenText()
+            binding.txtTrackName.setGreenText()
 
 
         }

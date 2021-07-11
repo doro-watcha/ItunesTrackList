@@ -121,6 +121,7 @@
             android:layout_height="wrap_content"
             android:padding="20dp"
             android:src="@drawable/ic_star"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintBottom_toBottomOf="@+id/img_art_work"
             app:layout_constraintEnd_toEndOf="parent" />
 
