@@ -10,6 +10,8 @@ import androidx.lifecycle.Observer
 import com.goddoro.watchaassignment.MainViewModel
 import com.goddoro.watchaassignment.databinding.FragmentFavoriteListBinding
 import com.goddoro.watchaassignment.util.Broadcast
+import com.goddoro.watchaassignment.util.CommonConst.SCROLL_ITEM_LIMIT
+import com.goddoro.watchaassignment.util.debugE
 import com.goddoro.watchaassignment.util.disposedBy
 import com.goddoro.watchaassignment.util.observeOnce
 import io.reactivex.disposables.CompositeDisposable
@@ -18,11 +20,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteListFragment : Fragment() {
 
+    private val TAG = FavoriteListFragment::class.java.simpleName
+
     private lateinit var mBinding : FragmentFavoriteListBinding
     private val mViewModel : MainViewModel by sharedViewModel()
 
     private val compositeDisposable = CompositeDisposable()
-
     private val reselectDisposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -52,7 +55,7 @@ class FavoriteListFragment : Fragment() {
                     mViewModel.deleteFavorite(it)
 
                     /**
-                     * Favorite에서 삭제할 때, 현재 Music Item에 있는 star도 제거해준다.
+                     * Favorite에서 삭제할 때, 현재 Music Item에 있는 star도 찾아서 같이 toggle해준다.
                      */
                     val musicItem = mViewModel.searchMusicList.value?.find { musicItem -> musicItem.trackId == it.trackId && musicItem.isFavorite.get() }
                     musicItem?.isFavorite?.set(false)
@@ -66,7 +69,7 @@ class FavoriteListFragment : Fragment() {
         mViewModel.apply {
 
             errorInvoked.observe(viewLifecycleOwner, {
-                Toast.makeText(context,it.message,Toast.LENGTH_SHORT).show()
+                debugE(TAG,it.message)
             })
         }
 
@@ -77,7 +80,10 @@ class FavoriteListFragment : Fragment() {
         Broadcast.apply {
 
             favoriteListReselectBroadcast.subscribe{
-                if ( mViewModel.favoriteList.value?.size ?: 0 > 30) mBinding.recyclerview.scrollToPosition(0)
+                /**
+                 * 너무 아래에서부터 smoothScroll하면 오래걸리므로 SCROLL_ITEM_LIMIT개 이상으로는 scrollToPosition으로 이동
+                 */
+                if ( mViewModel.favoriteList.value?.size ?: 0 > SCROLL_ITEM_LIMIT) mBinding.recyclerview.scrollToPosition(0)
                 else mBinding.recyclerview.smoothScrollToPosition(0)
             }.disposedBy(reselectDisposable)
         }

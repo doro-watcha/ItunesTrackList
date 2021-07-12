@@ -34,6 +34,9 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(mBinding.root)
 
+        /**
+         * onCreate 최초 호출시에만 initFragments에서 fragment add 수행
+         */
         initFragments(savedInstanceState == null)
         setupBottomNavigationView()
 
@@ -94,18 +97,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeFragment(menu: MainMenu) {
 
-        Log.d(TAG, "Change Fragment")
-
         val willShow = when (menu) {
             MainMenu.SEARCH -> fragment1
             MainMenu.FAVORITE -> fragment2
         }
-        Log.d(TAG, willShow.tag.toString())
+
         supportFragmentManager.beginTransaction().hide(curFragment).show(willShow).commit()
         curFragment = willShow
         mViewModel.menu.value = menu
     }
 
+    /**
+     * Favorite에서 onBackpressed 호출시 앱 종료하지 않고 탭 간 이동
+     */
     override fun onBackPressed() {
 
         if ( mViewModel.menu.value == MainMenu.FAVORITE) {

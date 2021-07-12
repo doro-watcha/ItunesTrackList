@@ -18,10 +18,6 @@ import com.goddoro.watchaassignment.util.setGreenText
 
 class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder>() {
 
-
-    private val onClick: PublishSubject<MusicItem> = PublishSubject.create()
-    val clickEvent: Observable<MusicItem> = onClick
-
     private val onClickStar : PublishSubject<Pair<Int,MusicItem>> = PublishSubject.create()
     val clickStar : Observable<Pair<Int,MusicItem>> = onClickStar
 
@@ -60,10 +56,6 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
         KoinComponent {
         init {
 
-            binding.root.setOnClickListener{
-
-            }
-
             binding.imgStar.setOnClickListener {
                 onClickStar.onNext(Pair(layoutPosition,differ.currentList[layoutPosition]))
             }
@@ -80,6 +72,10 @@ class SearchListAdapter: RecyclerView.Adapter<SearchListAdapter.SearchViewHolder
             binding.txtCollectionName.setGreenText()
             binding.txtTrackName.setGreenText()
 
+            /**
+             * 아이템이 10개밖에 남지 않았을 때 needMoreEvent발생,
+             * 추가로 불러오는 아이템이 10개 이하일경우를 대비해 마지막 아이템만 남았을 경우에도 한 번 호출
+             */
 
             if ( ( differ.currentList.size - 10 ) == layoutPosition || differ.currentList.size - 1 == layoutPosition  ) {
                 onNeedMore.onNext(Unit)

@@ -16,6 +16,10 @@ import com.goddoro.watchaassignment.util.toFavoriteItem
 import kotlinx.coroutines.launch
 import net.bytebuddy.implementation.bytecode.Throw
 
+
+/**
+ * 같은 ViewModel에서 관리하지 않을 경우 LocalBroadcast로 toggle sync를 맞춰야하는 문제가 생겨 sharedViewModel을 사용하기로 결정
+ */
 class MainViewModel(
     private val iTunesRepository: ITunesRepository,
     private val favoriteDao : FavoriteDao
@@ -29,6 +33,7 @@ class MainViewModel(
     val menu : MutableLiveData<MainMenu> = MutableLiveData(MainMenu.SEARCH)
 
     val searchMusicList : MutableLiveData<List<MusicItem>> = MutableLiveData()
+
     val favoriteList : MutableLiveData<List<FavoriteItem>> = MutableLiveData()
 
     /**
@@ -39,12 +44,8 @@ class MainViewModel(
     val onDeleteCompleted : MutableLiveData<Once<FavoriteItem>> = MutableLiveData()
     val errorInvoked : MutableLiveData<Throwable> = MutableLiveData()
 
-    /**
-     * 불러올 때 favorite list를 검사해서 별표를 체크해둘지 비워둘지 판단
-     */
 
     init {
-
         listSearchItems()
     }
 
@@ -71,6 +72,11 @@ class MainViewModel(
             }
         }
     }
+
+    fun refreshSearch() {
+        listSearchItems()
+    }
+
 
     fun needMoreData() {
 
@@ -104,8 +110,6 @@ class MainViewModel(
             }
             musicItem?.isFavorite = ObservableBoolean(true)
         }
-
-
     }
 
     /**
@@ -142,7 +146,6 @@ class MainViewModel(
 
     fun deleteFavorite ( item : FavoriteItem) {
 
-
         viewModelScope.launch {
 
             kotlin.runCatching {
@@ -153,10 +156,6 @@ class MainViewModel(
                 errorInvoked.value = it
             }
         }
-    }
-
-    fun refreshSearch() {
-        listSearchItems()
     }
 
 

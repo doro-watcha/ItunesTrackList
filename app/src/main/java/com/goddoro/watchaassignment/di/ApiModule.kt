@@ -13,5 +13,4 @@ val apiModule = module {
 
     single { get<Retrofit>().create(iTunesAPI::class.java) }
 
-
 }

@@ -87,8 +87,11 @@ fun debugE(message: Any?) {
     debugE("DEBUG", message)
 }
 
+/**
+ * list에 있는 단어들에 한하여 green색깔로 바꿔줌
+ */
 fun TextView.setGreenText() {
-    var list = listOf("Green Day", "Greenday", "greenday", "green day", "Green day", "GreenDay", "Green", "green")
+    val list = listOf("Green Day", "Greenday", "greenday", "green day", "Green day", "GreenDay", "Green", "green")
 
     val greenText = list.find { ( text.indexOf(it) >= 0) }
     if ( greenText != null) {

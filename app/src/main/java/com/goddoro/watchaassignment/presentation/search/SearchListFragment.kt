@@ -13,6 +13,7 @@ import com.goddoro.watchaassignment.MainViewModel
 import com.goddoro.watchaassignment.data.MusicItem
 import com.goddoro.watchaassignment.databinding.FragmentSearchListBinding
 import com.goddoro.watchaassignment.util.*
+import com.goddoro.watchaassignment.util.CommonConst.SCROLL_ITEM_LIMIT
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import org.koin.android.ext.android.inject
@@ -28,6 +29,9 @@ class SearchListFragment : Fragment() {
 
     private val mViewModel: MainViewModel by sharedViewModel()
 
+    /**
+     * debounce 처리를 위한 BehaviorSubject 객체
+     */
     private val starPressChanged : BehaviorSubject<Pair<Int,MusicItem>> = BehaviorSubject.create()
 
     private val toastUtil : ToastUtil by inject()
@@ -47,7 +51,6 @@ class SearchListFragment : Fragment() {
         mBinding.vm = mViewModel
         mBinding.lifecycleOwner = viewLifecycleOwner
 
-
         initView()
         setupRecyclerView()
         observeViewModel()
@@ -66,14 +69,7 @@ class SearchListFragment : Fragment() {
             adapter = SearchListAdapter().apply {
 
                 clickStar.subscribe({
-
-                    debugE(TAG, it.first)
-                    debugE(TAG, it.second.isFavorite)
-                    debugE(TAG, it.second)
-
                     it.second.isFavorite.toggle()
-
-                    debugE(TAG, it.second.isFavorite.get())
                     starPressChanged.onNext(it)
                 },{
                     mViewModel.errorInvoked.value = it
@@ -84,11 +80,9 @@ class SearchListFragment : Fragment() {
                 }.disposedBy(compositeDisposable)
             }
         }
-
     }
 
     private fun setupRefreshLayout() {
-
 
         mBinding.mSwipeRefreshLayout.apply {
 
@@ -118,11 +112,8 @@ class SearchListFragment : Fragment() {
                 toastUtil.createToast("${it.trackName}을(를) Favorite에서 삭제하었습니다").show()
             }
 
-            searchMusicList.observe(viewLifecycleOwner, {
-                Log.d(TAG, it.size.toString())
-            })
             errorInvoked.observe(viewLifecycleOwner, {
-                Log.d(TAG, it.toString())
+                debugE(TAG, it.message)
                 Toast.makeText(context, "서버가 불안정합니다",Toast.LENGTH_SHORT).show()
 
                 if ( mBinding.mSwipeRefreshLayout.isRefreshing) {
@@ -157,8 +148,11 @@ class SearchListFragment : Fragment() {
 
         Broadcast.apply {
 
+            /**
+             * 너무 아래에서부터 smoothScroll하면 오래걸리므로 SCROLL_ITEM_LIMIT개 이상으로는 scrollToPosition으로 이동
+             */
             searchListReselectBroadcast.subscribe{
-                if ( mViewModel.searchMusicList.value?.size ?: 0 > 30) mBinding.recyclerview.scrollToPosition(0)
+                if ( mViewModel.searchMusicList.value?.size ?: 0 > SCROLL_ITEM_LIMIT) mBinding.recyclerview.scrollToPosition(0)
                 else mBinding.recyclerview.smoothScrollToPosition(0)
             }.disposedBy(reselectDisposable)
         }

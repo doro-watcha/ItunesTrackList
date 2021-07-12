@@ -19,10 +19,6 @@ import org.koin.core.KoinComponent
 
 class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteViewHolder>() {
 
-
-    private val onClick: PublishSubject<FavoriteItem> = PublishSubject.create()
-    val clickEvent: Observable<FavoriteItem> = onClick
-
     private val onClickStar : PublishSubject<FavoriteItem> = PublishSubject.create()
     val clickStar : Observable<FavoriteItem> = onClickStar
 
@@ -57,10 +53,6 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
         KoinComponent {
         init {
 
-            binding.root.setOnClickListener{
-
-            }
-
             binding.imgStar.setOnClickListener {
                 onClickStar.onNext(differ.currentList[layoutPosition])
             }
@@ -74,7 +66,6 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
             binding.txtArtistName.setGreenText()
             binding.txtCollectionName.setGreenText()
             binding.txtTrackName.setGreenText()
-
 
         }
     }

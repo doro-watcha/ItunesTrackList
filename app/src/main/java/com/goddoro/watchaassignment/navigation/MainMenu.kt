@@ -11,9 +11,7 @@ enum class MainMenu(@IdRes override val menuId: Int, override val idx: Int) : IM
     ;
 
     companion object {
-        fun parseIdToIdx(@IdRes id: Int) = values().indexOfFirst { it.menuId == id }
         fun parseIdToMainMenu(@IdRes id: Int) = values().first { it.menuId == id }
-        fun parseIndexToMainMenu(idx: Int) = values().first { it.idx == idx }
     }
 }
 

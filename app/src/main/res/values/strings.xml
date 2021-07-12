@@ -3,4 +3,7 @@
 
     <string name="txt_collection_name">Collection Name</string>
     <string name="txt_artist_name">Artist Name</string>
+    <string name="txt_no_favorite_items">There are no favorite items</string>
+    <string name="txt_common_favorite">Favorite</string>
+    <string name="txt_common_search">Search</string>
 </resources>
