@@ -28,7 +28,7 @@
 
 - Koin : Dependency Injection
 
-- Kotlin Coroutine : Asynchronized Behavior and Data fetching data
+- Kotlin Coroutine : Asynchronized Behavior and Data fetching
 
 - RxJava : Local Broadcast, Debounce Event, Paging event ( Asynchronized Behavior ) 
 
