@@ -54,8 +54,8 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
         KoinComponent {
         init {
 
-            binding.imgStar.setOnDebounceClickListener {
-                onClickStar.onNext(differ.currentList[layoutPosition])
+            binding.imgStar.setOnClickListener {
+                if ( layoutPosition >= 0 ) onClickStar.onNext(differ.currentList[layoutPosition])
             }
 
         }
