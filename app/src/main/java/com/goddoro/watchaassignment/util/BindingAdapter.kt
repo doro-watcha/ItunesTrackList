@@ -14,8 +14,7 @@ fun ImageView.loadUrlAsync(url: String?, placeholder: Drawable? = null) {
     } else {
         Glide.with(this).load(url)
             .apply {
-                if (placeholder != null)
-                    (placeholder)
+                placeholder
             }
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(this)
