@@ -12,6 +12,7 @@ import com.goddoro.watchaassignment.data.database.FavoriteItem
 import com.goddoro.watchaassignment.databinding.ItemFavoriteBinding
 import com.goddoro.watchaassignment.databinding.ItemSearchBinding
 import com.goddoro.watchaassignment.util.setGreenText
+import com.goddoro.watchaassignment.util.setOnDebounceClickListener
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.koin.core.KoinComponent
@@ -53,7 +54,7 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
         KoinComponent {
         init {
 
-            binding.imgStar.setOnClickListener {
+            binding.imgStar.setOnDebounceClickListener {
                 onClickStar.onNext(differ.currentList[layoutPosition])
             }
 

@@ -28,8 +28,6 @@ fun HashMap<String, out Any?>.filterValueNotNull(): HashMap<String, Any> {
     return this.filterNot { it.value == null } as HashMap<String, Any>
 }
 
-
-
 fun MusicItem.toFavoriteItem( index : Int ) : FavoriteItem {
     return FavoriteItem(
         trackId = this.trackId,
@@ -58,11 +56,6 @@ open class Once<out T>(private val content: T) {
             content
         }
     }
-
-    /**
-     * Returns the content, even if it's already been handled.
-     */
-    fun peekContent(): T = content
 }
 
 fun <T> LiveData<Once<T>>.observeOnce(lifecycle: LifecycleOwner, listener: (T) -> Unit) {
@@ -70,6 +63,7 @@ fun <T> LiveData<Once<T>>.observeOnce(lifecycle: LifecycleOwner, listener: (T) -
         it?.getContentIfNotHandled()?.let {
             listener(it)
         }
+
     })
 }
 
