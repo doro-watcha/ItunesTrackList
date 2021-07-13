@@ -53,6 +53,9 @@ class FavoriteListAdapter: RecyclerView.Adapter<FavoriteListAdapter.FavoriteView
     inner class FavoriteViewHolder(private val binding: ItemFavoriteBinding) : RecyclerView.ViewHolder(binding.root),
         KoinComponent {
         init {
+            /*
+             * 연속 클릭에 의한 layoutPosition == -1 인 상황 제거
+             */
 
             binding.imgStar.setOnClickListener {
                 if ( layoutPosition >= 0 ) onClickStar.onNext(differ.currentList[layoutPosition])
