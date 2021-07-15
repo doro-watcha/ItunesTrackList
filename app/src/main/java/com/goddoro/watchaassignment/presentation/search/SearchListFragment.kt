@@ -16,6 +16,7 @@ import com.goddoro.watchaassignment.util.*
 import com.goddoro.watchaassignment.util.CommonConst.SCROLL_ITEM_LIMIT
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,7 +33,7 @@ class SearchListFragment : Fragment() {
     /**
      * debounce 처리를 위한 BehaviorSubject 객체
      */
-    private val starPressChanged : BehaviorSubject<Pair<Int,MusicItem>> = BehaviorSubject.create()
+    private val starPressChanged : PublishSubject<Pair<Int,MusicItem>> = PublishSubject.create()
 
     private val toastUtil : ToastUtil by inject()
 
@@ -126,7 +127,7 @@ class SearchListFragment : Fragment() {
     private fun listenStarChange () {
 
         starPressChanged
-            .debounce(10L, TimeUnit.MILLISECONDS)
+            .debounce(1000L, TimeUnit.MILLISECONDS)
             .addSchedulers()
             .subscribe({
 

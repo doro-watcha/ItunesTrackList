@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                 .commit()
             fm.beginTransaction().add(R.id.fragmentContainer, fragment2, "1").hide(fragment2)
                 .commit()
-
         }
     }
 
